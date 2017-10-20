@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Exec=xmixer
+Icon=xmixer
+Name=xmixer
+NotShowIn=GNOME;KDE;XFCE;X-IVI;Unity;MATE;LXDE
+Terminal=false
+StartupNotify=false

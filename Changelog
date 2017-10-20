@@ -1,0 +1,20 @@
+2017-10-21 Cjacker Hunag <cjacker@foxmail.com>
+- Change name to 'xmixer'
+- Clean codes.
+
+2014-05-21 Cjacker huang <cjacker@gmail.com>
+- Add osd, codes from mate desktop
+
+2014-05-09 Cjacker huang <cjacker@gmail.com>
+- Add keybinder codes to handle global hotkey.
+
+2014-05-07 Cjacker huang <cjacker@gmail.com>
+- 0.4, switch to gtk3
+
+2009-09-15 Cjacker Huang <cjacker@gmail.com>
+- 0.2 released
+- fix mixer window popup position under multihead display.
+- add a event listener to listen alsa events.
+
+2009-09-13 Cjacker Huang <cjacker@gmail.com>
+- 0.1 released
