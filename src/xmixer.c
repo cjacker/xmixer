@@ -181,13 +181,63 @@ GtkWidget *create_osd()
 {
     GtkWidget *osd = msd_media_keys_window_new();
     gtk_widget_realize(osd);
-    //move it to bottom
-    int osd_width, osd_height;
-    gtk_window_get_size(GTK_WINDOW(osd), &osd_width, &osd_height);
-    GdkRectangle prim_monitor_rect;
-    GdkScreen *screen = gdk_screen_get_default();
-    gdk_screen_get_monitor_geometry(screen, gdk_screen_get_primary_monitor(screen), &prim_monitor_rect);
-    gtk_window_move(GTK_WINDOW(osd), (prim_monitor_rect.width - osd_width)/2, prim_monitor_rect.height - osd_height - 120);
+
+    int            orig_w;
+    int            orig_h;
+    int            screen_w;
+    int            screen_h;
+    int            x;
+    int            y;
+    int            pointer_x;
+    int            pointer_y;
+    GtkRequisition win_req;
+    GdkScreen     *pointer_screen;
+    GdkRectangle   geometry;
+    int            monitor;
+    GdkDisplay    *display;
+    GdkDeviceManager *device_manager;
+    GdkDevice     *device;
+
+    /*
+     * get the window size
+     * if the window hasn't been mapped, it doesn't necessarily
+     * know its true size, yet, so we need to jump through hoops
+     */
+    gtk_window_get_default_size (GTK_WINDOW (osd), &orig_w, &orig_h);
+    gtk_widget_get_preferred_size (osd, NULL, &win_req);
+
+    if (win_req.width > orig_w) {
+        orig_w = win_req.width;
+    }
+    if (win_req.height > orig_h) {
+        orig_h = win_req.height;
+    }
+
+    pointer_screen = NULL;
+    display = gtk_widget_get_display (osd);
+    device_manager = gdk_display_get_device_manager (display);
+    device = gdk_device_manager_get_client_pointer (device_manager);
+    gdk_device_get_position (device,
+             &pointer_screen,
+             &pointer_x,
+             &pointer_y);
+
+    monitor = gdk_screen_get_monitor_at_point (pointer_screen,
+                           pointer_x,
+                           pointer_y);
+
+    gdk_screen_get_monitor_geometry (pointer_screen,
+                     monitor,
+                     &geometry);
+
+    screen_w = geometry.width;
+    screen_h = geometry.height;
+
+    x = ((screen_w - orig_w) / 2) + geometry.x;
+    y = geometry.y + (screen_h / 2) + (screen_h / 2 - orig_h) / 2;
+
+    gtk_window_move (GTK_WINDOW (osd), x, y);
+
     return osd;
 }
 
