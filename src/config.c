@@ -1,6 +1,7 @@
 #include <glib.h>
 #include <stdio.h>
-
+#include <glib.h>
+#include <glib/gstdio.h>
 #include "config.h"
 #include "alsa.h"
 
@@ -28,7 +29,10 @@ void xmixer_save_config(gint mute, gint volume)
     GKeyFile * config = g_key_file_new();
     GError * err = NULL;
     gchar * configdir = g_build_filename(g_get_home_dir(),"/.config",NULL);
-    mkdir(configdir,0700);
+    if (! g_file_test(configdir, G_FILE_TEST_EXISTS)) {
+        g_mkdir(configdir, 0700);
+    }
+
     gchar * filename = g_build_filename(configdir ,"xmixerrc",NULL);
 
     g_key_file_set_integer(config,"xmixer","mute", mute);
@@ -37,9 +41,6 @@ void xmixer_save_config(gint mute, gint volume)
     gsize length = 0;
     content = g_key_file_to_data(config, &length, &err);
     if(!err){
-        if (! g_file_test(configdir, G_FILE_TEST_EXISTS)) {
-            g_mkdir(configdir);
-        }
         FILE *f = fopen(filename,"w");
         if (f != NULL) {
             fprintf(f,content);
